@@ -84,6 +84,7 @@ const replaceAvatarsWithImage = (props, profilesAvailables) => {
 };
 
 const selectProfile = (navigation, item) => {
+  console.log('Navega para home com esses parametros', item.name);
   navigation.navigate('Home', {name: item.name});
 };
 
@@ -105,7 +106,7 @@ const More = (props) => {
                 image={item.icon}
                 uri={item.uri}
                 name={item.name}
-                onPress={(item) => selectProfile(props.navigation, item)}
+                onPress={() => selectProfile(props.navigation, item)}
               />
             );
           })}

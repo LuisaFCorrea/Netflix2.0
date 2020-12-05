@@ -28,16 +28,7 @@ const MovieCard = styled.View`
 
 const AnimatedMoviePoster = animated(MoviePoster);
 
-/**
- * Utilizando a biblioteca react-spring
- * Anime os componentes  Moviews para que ele desapareça assim que essa tela for construida.
- * Leve a opacidade dele de 1 para 0
- * Utilizem várias molas -> useSprings
- * O item 1 deve desaparecer em 1 segundos....
- * O item 2 deve desaparecer em 2 segundos....
- */
-
-const Movies = ({label, items}) => {
+const Movies = ({label, data}) => {
 
   const [pressed, setPressed] =  useState(null)
 
@@ -48,11 +39,11 @@ const Movies = ({label, items}) => {
     <Container>
       <Label>{label}</Label>
       <MovieScroll horizontal>
-        {items.map((movie, index) => {
+        {data.map((movie, index) => {
           return (
             <MovieCard key={String(index)}>
               <TouchableWithoutFeedback onPressIn={() => {setPressed(index)}} onPressOut={() => {setPressed(null)}}>
-                <AnimatedMoviePoster style={pressed === index ? {transform: [translate]} : null} resizeMode="cover" source={movie} />
+                <AnimatedMoviePoster style={pressed === index ? {transform: [translate]} : null} resizeMode="cover" source={{uri: movie.Poster}} />
               </TouchableWithoutFeedback>
             </MovieCard>
           );
