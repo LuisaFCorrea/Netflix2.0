@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import Geolocation from '@react-native-community/geolocation';
-import Geocoder from 'react-native-geocoder';
+import React, { useEffect, useState } from "react";
+import Geolocation from "@react-native-community/geolocation";
+import Geocoder from "react-native-geocoder";
 
-import {StatusBar, Dimensions} from 'react-native';
+import { StatusBar, Dimensions } from "react-native";
 
-import styled from 'styled-components/native';
+import styled from "styled-components/native";
 
-import Header from '../components/Header';
-import Hero from '../components/Hero';
-import Movies from '../components/Movies';
+import Header from "../components/Header";
+import Hero from "../components/Hero";
+import Movies from "../components/Movies";
+
+import { GetLocation, GetCountry } from "../utils/Location";
 
 const api = [
-  require('../assets/movie1.jpg'),
-  require('../assets/movie2.jpg'),
-  require('../assets/movie3.jpg'),
-  require('../assets/movie4.jpg'),
+  require("../assets/movie1.jpg"),
+  require("../assets/movie2.jpg"),
+  require("../assets/movie3.jpg"),
+  require("../assets/movie4.jpg"),
 ];
 
 const Container = styled.ScrollView`
@@ -24,40 +26,62 @@ const Container = styled.ScrollView`
 
 const Poster = styled.ImageBackground`
   width: 100%;
-  height: ${(Dimensions.get('window').height * 81) / 100}px;
+  height: ${(Dimensions.get("window").height * 81) / 100}px;
 `;
 
-
-
-/**
- * Utilizando a biblioteca react-spring
- * Anime o componente Post para que ele desapareça assim que essa tela for construida.
- * Leve a opacidade dele de 1 para 0 em 3 segundos.
- */
-
 const Home = (props) => {
-  console.log('props', JSON.stringify(props));
-
   const [movies, setMovies] = useState([]);
+  const [nationalMovies, setNationalMovies] = useState([]);
+  const [position, setPosition] = useState(null);
 
   useEffect(() => {
-    const data = require('../assets/Movies.json')
-    setMovies(data)
-  }, [])
+    GetLocation()
+      .then((info) => {
+        setPosition(info);
+      })
+      .catch(() => setPosition(null));
+  }, []);
 
-  const onObtainPosition = (position) => {  
-     console.log('position', position)
-     const pos = {
-      lat: position.coords.latitude,
-      long: position.coords.longitude
+  useEffect(() => {
+    const getNationalMovies = async () => {
+      if (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        const country = await GetCountry({ lat, lng });
+        console.log("country", country);
+
+        const filteredMovies = movies.filter((item, index) => {
+          return item.Country.indexOf(country) !== -1
+        });
+        setNationalMovies(filteredMovies);
+      }
     }
-      Geocoder.geocodePosition(pos).then(res => {
-          console.log(res)
-    })
-  }
+    getNationalMovies()
+   
+  }, [position]);
 
-  Geolocation.getCurrentPosition(onObtainPosition, error => console.error(error));
+  useEffect(() => {
+    const data = require("../assets/Movies.json");
+    setMovies(data);
+  }, []);
 
+  console.log("position", position);
+
+  const onObtainPosition = (position) => {
+    console.log("position", position);
+    const pos = {
+      lat: position.coords.latitude,
+      long: position.coords.longitude,
+    };
+    Geocoder.geocodePosition(pos).then((res) => {
+      console.log(res);
+    });
+  };
+
+  Geolocation.getCurrentPosition(onObtainPosition, (error) =>
+    console.error(error)
+  );
 
   return (
     <>
@@ -67,19 +91,16 @@ const Home = (props) => {
         barStyle="light-content"
       />
       <Container>
-        <Poster source={require('../assets/poster.jpg')}>
-            <Header />
-            <Hero />
+        <Poster source={require("../assets/poster.jpg")}>
+          <Header />
+          <Hero />
         </Poster>
-        <Movies label={`Continuar assistindo`} 
-          data={movies}
-        />
-        <Movies label="Nacionais" data={movies} />
+        <Movies label={`Continuar assistindo`} data={movies} />
+        <Movies label="Nacionais" data={nationalMovies} />
         <Movies label="Recomendados" data={movies} />
         <Movies label="Top 10" data={movies} />
       </Container>
     </>
-    
   );
 };
 
