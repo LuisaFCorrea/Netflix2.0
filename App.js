@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Alert } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import ProfileContext from './Context/profileContext'
 
 import Tabs from './routes/Tabs'
 import ProfileToEdit from './screen/ProfileToEdit'
@@ -12,6 +13,7 @@ import Camera from './screen/Camera'
 const Stack = createStackNavigator();
 
 const App = () => {
+
 	//Notificação quando app ta aberto
 	useEffect(() => {
 		// Assume a message-notification contains a "type" property in the data payload of the screen to open
@@ -30,15 +32,20 @@ const App = () => {
     return unsubscribe;
   }, []);
 
+  const [user, changeUser] = useState('Jose')
+  console.log('user', user);
+
 	return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Tabs" component={Tabs} options={{headerShown: false}} />
-        <Stack.Screen name="ProfileToEdit" component={ProfileToEdit} />
-        <Stack.Screen name="ChooseIcon" component={ChooseIcon} />
-        <Stack.Screen name="Camera" component={Camera} options={{headerShown: false}}/>
-      </Stack.Navigator>
+    <ProfileContext.Provider value={{user, changeUser}}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Tabs" component={Tabs} options={{headerShown: false}} />
+          <Stack.Screen name="ProfileToEdit" component={ProfileToEdit} />
+          <Stack.Screen name="ChooseIcon" component={ChooseIcon} />
+          <Stack.Screen name="Camera" component={Camera} options={{headerShown: false}}/>
+        </Stack.Navigator>
     </NavigationContainer>
+    </ProfileContext.Provider>
   )
 }
 

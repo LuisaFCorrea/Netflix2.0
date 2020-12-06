@@ -10,6 +10,8 @@ import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Movies from "../components/Movies";
 
+import ProfileCntext from "../Context/profileContext";
+
 import { GetLocation, GetCountry } from "../utils/Location";
 
 const api = [
@@ -52,13 +54,12 @@ const Home = (props) => {
         console.log("country", country);
 
         const filteredMovies = movies.filter((item, index) => {
-          return item.Country.indexOf(country) !== -1
+          return item.Country.indexOf(country) !== -1;
         });
         setNationalMovies(filteredMovies);
       }
-    }
-    getNationalMovies()
-   
+    };
+    getNationalMovies();
   }, [position]);
 
   useEffect(() => {
@@ -82,25 +83,39 @@ const Home = (props) => {
   Geolocation.getCurrentPosition(onObtainPosition, (error) =>
     console.error(error)
   );
-
+  
   return (
-    <>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="light-content"
-      />
-      <Container>
-        <Poster source={require("../assets/poster.jpg")}>
-          <Header />
-          <Hero />
-        </Poster>
-        <Movies label={`Continuar assistindo`} data={movies} />
-        <Movies label="Nacionais" data={nationalMovies} />
-        <Movies label="Recomendados" data={movies} />
-        <Movies label="Top 10" data={movies} />
-      </Container>
-    </>
+    <ProfileCntext.Consumer>
+      {({user, changeUser}) => {
+        let movieToResume = [];
+        if (user) {
+          const data = require("../assets/moviesToResume.json");
+          movieToResume = data[user];
+        }
+        return (
+          <>
+            <StatusBar
+              translucent
+              backgroundColor="transparent"
+              barStyle="light-content"
+            />
+            <Container>
+              <Poster source={require("../assets/poster.jpg")}>
+                <Header />
+                <Hero />
+              </Poster>
+              <Movies
+                label={`Continuar assistindo como ${user}`}
+                data={movieToResume}
+              />
+              <Movies label="Nacionais" data={nationalMovies} />
+              <Movies label="Recomendados" data={movies} />
+              <Movies label="Top 10" data={movies} />
+            </Container>
+          </>
+        );
+      }}
+    </ProfileCntext.Consumer>
   );
 };
 
