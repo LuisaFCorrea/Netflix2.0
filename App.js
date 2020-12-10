@@ -9,6 +9,7 @@ import Tabs from './routes/Tabs'
 import ProfileToEdit from './screen/ProfileToEdit'
 import ChooseIcon from './screen/ChooseIcon'
 import Camera from './screen/Camera'
+import {configureLanguageToI18n} from './languages/utils'
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const App = () => {
 
   const [user, changeUser] = useState('Jose')
   console.log('user', user);
+  configureLanguageToI18n()
 
 	return (
     <ProfileContext.Provider value={{user, changeUser}}>

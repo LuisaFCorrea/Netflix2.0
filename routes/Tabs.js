@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './../screen/Home';
 import More from './../screen/More';
 import ToBeDone from './../screen/ToBeDone'
+import {translate} from '../languages/utils'
 
 const Tab = createBottomTabNavigator();
 
@@ -22,35 +23,35 @@ export default class Tabs extends React.Component {
           name="Home"
           component={Home}
           options={{
-            tabBarLabel: 'Home',
+            tabBarLabel: translate('home'),
           }}
         />
         <Tab.Screen
           name="More"
           component={More}
           options={{
-            tabBarLabel: 'More',
+            tabBarLabel: translate('more'),
           }}
         />
         <Tab.Screen
           name="Search"
           component={ToBeDone}
           options={{
-            tabBarLabel: 'Buscar',
+            tabBarLabel: translate('search') ,
           }}
         />
         <Tab.Screen
           name="UpComing"
           component={ToBeDone}
           options={{
-            tabBarLabel: 'Em Breve',
+            tabBarLabel: translate('soon'),
           }}
         />
         <Tab.Screen
           name="Downloads"
           component={ToBeDone}
           options={{
-            tabBarLabel: 'Downloads',
+            tabBarLabel: translate('downloads'),
           }}
         />
       </Tab.Navigator>
