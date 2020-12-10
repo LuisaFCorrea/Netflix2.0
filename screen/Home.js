@@ -106,7 +106,7 @@ const Home = (props) => {
               </Poster>
               <Movies
                 label={`Continuar assistindo como ${user}`}
-                data={nationalMovies}
+                data={movieToResume}
               />
               <Movies label="Nacionais" data={nationalMovies} />
               <Movies label="Recomendados" data={movies} />
