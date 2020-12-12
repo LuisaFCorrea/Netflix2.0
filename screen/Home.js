@@ -91,7 +91,7 @@ const Home = (props) => {
         if (user) {
           const data = require("../assets/moviesToResume.json");
           movieToResume = data[user];
-        }
+        } 
         return (
           <>
             <StatusBar
