@@ -8,7 +8,11 @@ export const GetCountry = (({lat, lng}) => {
       lng
     })
     .then((location) => {
-      resolve(location[0].countryCode)
+      location.forEach(function(value) {
+          if(value.countryCode !== null){
+              resolve(value.countryCode);
+          }
+        });
     })
     .catch((error) => {
       reject(error)
